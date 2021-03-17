@@ -1,13 +1,15 @@
 import React from 'react';
 import { QueryClientProvider, QueryClient, useQuery } from 'react-query'
 
+const queryClient = new QueryClient();
+
 const fetchPlanets = async () => {
     const res = await fetch('http://swapi.dev/api/planets/');
     return res.json();
 }
 
 const Planets = () => {
-    const {data, status} = useQuery('planets', fetchPlanets)
+    const {data, status} = useQuery('planets', fetchPlanets);
     console.log(data);
     return (
         <div>
@@ -30,4 +32,10 @@ const Planets = () => {
     );
 }
 
-export default Planets;
+//high order function
+export default function Wrapped(){
+    return (<QueryClientProvider client = {queryClient}>
+        <Planets />
+        </QueryClientProvider>
+    );
+}
