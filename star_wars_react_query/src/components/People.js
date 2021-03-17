@@ -1,20 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { QueryClientProvider, QueryClient, useQuery } from 'react-query'
 import Person from '../models/Person'
 
 const queryClient = new QueryClient();
 
-const fetchPeople = async () => {
-    const res = await fetch('http://swapi.dev/api/people/');
-    return res.json();
-}
-
 const People = () => {
-    const {data, status} = useQuery('people', fetchPeople);
-    console.log(data);
+
+    const [page, setPage] = useState(1);
+    const fetchPeople = async (key) => await (await fetch(`http://swapi.dev/api/people/?page=${page}`)).json();
+    const {data, status} = useQuery(['people', page], fetchPeople);
+    
     return (
         <div>
             <h2>People</h2>
+
+            <button onClick={() => setPage(1)}>page 1</button>
+            <button onClick={() => setPage(2)}>page 2</button>
+            <button onClick={() => setPage(3)}>page 3</button>
 
             {status === 'loading' && (
                 <div>Loading data</div>
